@@ -1,8 +1,6 @@
 import express from "express";
 import path from "node:path";
-import passport from "passport";
 import compression from "compression";
-import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import enviroments from "~/config/enviroments.config";
 import { ERROR_MIDDLEWARE, attachControllers } from "@decorators/express";
@@ -12,7 +10,6 @@ import { Container } from "@decorators/di";
 import { logger } from "@vigilio/express-core/helpers";
 import { apiRouters } from "~/routers/api.router";
 import { middlewareRoute } from "~/libs/middleware-route";
-
 export class Server {
     public readonly app: express.Application = express();
 
@@ -35,8 +32,6 @@ export class Server {
             })
         );
 
-        // habilitar cookies
-        this.app.use(cookieParser());
         // habilitar para consumir json
         this.app.use(express.json());
         // habilitar carpeta public
@@ -47,17 +42,7 @@ export class Server {
         connectDB();
     }
 
-    async auth() {
-        this.app.use(passport.initialize());
-        this.app.use(passport.session());
-        passport.serializeUser((user, done) => {
-            return done(null, user);
-        });
-        passport.deserializeUser(async (_user, _done) => {
-            // if (!usuario) return done({ message: "error authenticated" });
-            // return done(null, usuario);
-        });
-    }
+    async auth() {}
 
     routes() {
         this.app.use(morgan("dev"));
@@ -66,6 +51,11 @@ export class Server {
         Container.provide([
             { provide: ERROR_MIDDLEWARE, useClass: ServerErrorMiddleware },
         ]);
+        this.app.get("/", (_, res) =>
+            res.send(
+                "<div><img width='100' height='100' src='/images/logo.png'/><a href='/api'>Api</a></div>"
+            )
+        );
         this.app.use("/api", apiRouter);
         this.app.use(middlewareRoute);
     }

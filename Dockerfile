@@ -12,7 +12,7 @@ FROM base AS development
 WORKDIR /usr/src/app
 COPY . .
 COPY --from=dependencies /usr/src/app/node_modules ./node_modules
-CMD ["bun", "serve"]
+CMD ["bun", "dev"]
 
 FROM base AS build
 WORKDIR /usr/src/app

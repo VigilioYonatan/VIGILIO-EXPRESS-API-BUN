@@ -32,6 +32,12 @@ bun install
 bun compose up -d
 ```
 
+# TEST API
+
+```
+http://localhost:4000/api
+```
+
 Detener contenedor y iniciar contenedor
 
 ```bash
